@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPS ConnectED - E-Learning Community</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-light: #6366F1;
+            --secondary: #10B981;
+            --accent: #F59E0B;
+            --bg: #0F172A;
+            --surface: #1E293B;
+            --surface-light: #334155;
+            --surface-lighter: #475569;
+            --text: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+            --success: #22C55E;
+            --error: #EF4444;
+            --orange: #F97316;
+            --purple: #A855F7;
+            --pink: #EC4899;
+            --cyan: #06B6D4;
+            --radius: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.3);
+            --glow: 0 0 20px rgba(79, 70, 229, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(79, 70, 229, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 260px 1fr 340px;
+            min-height: 100vh;
+        }
+
+        .sidebar-left {
+            background: var(--surface);
+            border-right: 1px solid rgba(255,255,255,0.05);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: transparent;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .user-card {
+            background: linear-gradient(135deg, var(--surface-light), var(--surface));
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .user-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .user-info h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .user-info .level {
+            font-size: 13px;
+            color: var(--accent);
+        }
+
+        .xp-bar {
+            height: 6px;
+            background: var(--bg);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .xp-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            width: 65%;
+        }
+
+        .xp-text {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+            text-align: center;
+        }
+
+        .nav-section h4 {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            padding-left: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .nav-item:hover {
+            background: var(--surface-light);
+            color: var(--text);
+        }
+
+        .nav-item.active {
+            background: rgba(79, 70, 229, 0.15);
+            color: var(--primary-light);
+        }
+
+        .nav-item .badge {
+            margin-left: auto;
+            background: var(--error);
+            color: white;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .subjects-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .subject-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .subject-item:hover {
+            background: var(--surface-light);
+            color: var(--text);
+        }
+
+        .subject-item.active {
+            background: var(--surface-light);
+            color: var(--text);
+        }
+
+        .main-content {
+            padding: 24px;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--surface-light);
+        }
+
+        .btn-ghost:hover {
+            background: var(--surface-light);
+            color: var(--text);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .filter-tab {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            background: var(--surface);
+            color: var(--text-secondary);
+            border: none;
+        }
+
+        .filter-tab:hover {
+            background: var(--surface-light);
+            color: var(--text);
+        }
+
+        .filter-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .feed {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .post-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255,255,255,0.05);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .post-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .post-header {
+            padding: 16px 16px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .post-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .post-meta {
+            flex: 1;
+        }
+
+        .post-meta .author {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .post-meta .time {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .subject-tag {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .post-content {
+            padding: 0 16px 12px;
+        }
+
+        .post-content h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .post-content p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .post-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .post-actions {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .vote-btn, .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .vote-btn:hover, .action-btn:hover {
+            background: var(--surface-light);
+            color: var(--text);
+        }
+
+        .vote-btn.upvoted {
+            color: var(--success);
+        }
+
+        .vote-btn.downvoted {
+            color: var(--error);
+        }
+
+        .continue-btn {
+            margin-left: auto;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, var(--secondary), #059669);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .continue-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .sidebar-right {
+            background: var(--surface);
+            border-left: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .chat-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .chat-item:hover {
+            background: var(--surface-light);
+        }
+
+        .chat-item.active {
+            background: rgba(79, 70, 229, 0.15);
+        }
+
+        .chat-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .chat-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chat-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .chat-info p {
+            font-size: 12px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .unread-count {
+            background: var(--primary);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .chat-window {
+            height: 400px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: var(--radius-xl);
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message.sent {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+        }
+
+        .message.received {
+            background: var(--surface-light);
+            color: var(--text);
+            align-self: flex-start;
+        }
+
+        .chat-input {
+            padding: 12px 16px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            background: var(--bg);
+            border: none;
+            padding: 12px 16px;
+            border-radius: 24px;
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .chat-input input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .chat-input button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .chat-input button:hover {
+            background: var(--primary-light);
+            transform: scale(1.1);
+        }
+
+        .leaderboard {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .leaderboard h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .leaderboard-item:last-child {
+            border-bottom: none;
+        }
+
+        .rank {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .rank.gold {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+        }
+
+        .rank.silver {
+            background: linear-gradient(135deg, #C0C0C0, #A0A0A0);
+            color: #000;
+        }
+
+        .rank.bronze {
+            background: linear-gradient(135deg, #CD7F32, #A0522D);
+            color: #fff;
+        }
+
+        .leaderboard-user {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .leaderboard-info {
+            flex: 1;
+        }
+
+        .leaderboard-info h5 {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .leaderboard-info span {
+            font-size: 11px;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .achievements {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .achievements h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .badges {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .badge:hover {
+            transform: scale(1.1);
+        }
+
+        .badge.unlocked {
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        .badge.locked {
+            filter: grayscale(1);
+            opacity: 0.4;
+        }
+
+        @media (max-width: 1200px) {
+            .app-container {
+                grid-template-columns: 260px 1fr;
+            }
+            .sidebar-right {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar-left {
+                display: none;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--surface-light);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar-left">
+            <div class="logo">
+                <div class="logo-icon"><img src="https://supa.kortix.com/storage/v1/object/public/image-uploads/loaded_images/image_2026-02-25_153514844_20260225_113554_9111068f.png" alt="TPS ConnectED"></div>
+                <span class="logo-text">TPS ConnectED</span>
+            </div>
+
+            <div class="user-card">
+                <div class="user-card-header">
+                    <div class="avatar">MA</div>
+                    <div class="user-info">
+                        <h3>Marcus Alvaro</h3>
+                        <div class="level">⭐ Level 12 Scholar</div>
+                    </div>
+                </div>
+                <div class="xp-bar">
+                    <div class="xp-bar-fill"></div>
+                </div>
+                <div class="xp-text">2,450 / 3,000 XP</div>
+            </div>
+
+            <nav class="nav-section">
+                <h4>Menu</h4>
+                <div class="nav-item active">🏠 Home Feed</div>
+                <div class="nav-item">📖 My Courses <span class="badge">3</span></div>
+                <div class="nav-item">💬 Messages <span class="badge">5</span></div>
+                <div class="nav-item">📝 Assignments</div>
+                <div class="nav-item">🏆 Achievements</div>
+                <div class="nav-item">📊 Progress</div>
+            </nav>
+
+            <nav class="nav-section">
+                <h4>Communities</h4>
+                <div class="subjects-list">
+                    <div class="subject-item active">All Posts</div>
+                    <div class="subject-item">Mathematics</div>
+                    <div class="subject-item">Science</div>
+                    <div class="subject-item">English</div>
+                    <div class="subject-item">History</div>
+                    <div class="subject-item">Programming</div>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="header">
+                <h1>Your Learning Feed</h1>
+                <div>
+                    <button class="btn btn-ghost">🔔</button>
+                    <button class="btn btn-primary">+ New Post</button>
+                </div>
+            </div>
+
+            <div class="filter-tabs">
+                <button class="filter-tab active">For You</button>
+                <button class="filter-tab">Popular</button>
+                <button class="filter-tab">Recent</button>
+                <button class="filter-tab">Your Courses</button>
+                <button class="filter-tab">Questions</button>
+                <button class="filter-tab">Discussions</button>
+            </div>
+
+            <div class="feed">
+                <article class="post-card">
+                    <div class="post-header">
+                        <div class="post-avatar" style="background: linear-gradient(135deg, #4F46E5, #7C3AED);">M</div>
+                        <div class="post-meta">
+                            <div class="author">Math Academy</div>
+                            <div class="time">2 hours ago • Mathematics</div>
+                        </div>
+                        <span class="subject-tag" style="background: rgba(239, 68, 68, 0.2); color: #F87171;">Course</span>
+                    </div>
+                    <div class="post-content">
+                        <h3>Introduction to Calculus: Limits & Derivatives</h3>
+                        <p>Master the fundamental concepts of calculus. Learn about limits, continuity, and differentiation with interactive examples.</p>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&h=300&fit=crop" alt="Calculus" class="post-image">
+                    <div class="post-actions">
+                        <button class="vote-btn" onclick="upvote(this)">▲ <span class="count">847</span></button>
+                        <button class="vote-btn" onclick="downvote(this)">▼</button>
+                        <button class="action-btn" onclick="alert('💬 Comments section coming soon!')">💬 42</button>
+                        <button class="action-btn" onclick="alert('Post shared!')">🔗 Share</button>
+                        <button class="continue-btn">Continue Learning →</button>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-header">
+                        <div class="post-avatar" style="background: linear-gradient(135deg, #10B981, #059669);">S</div>
+                        <div class="post-meta">
+                            <div class="author">Science Squad</div>
+                            <div class="time">4 hours ago • Science</div>
+                        </div>
+                        <span class="subject-tag" style="background: rgba(34, 197, 94, 0.2); color: #4ADE80;">Discussion</span>
+                    </div>
+                    <div class="post-content">
+                        <h3>What would happen if the sun suddenly disappeared?</h3>
+                        <p>I've been wondering about this for a while. Without sunlight, how long would Earth remain habitable? Let's discuss the cascading effects!</p>
+                    </div>
+                    <div class="post-actions">
+                        <button class="vote-btn upvoted" onclick="upvote(this)">▲ <span class="count">1.2k</span></button>
+                        <button class="vote-btn" onclick="downvote(this)">▼</button>
+                        <button class="action-btn" onclick="alert('💬 Comments section coming soon!')">💬 128</button>
+                        <button class="action-btn" onclick="alert('Post shared!')">🔗 Share</button>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-header">
+                        <div class="post-avatar" style="background: linear-gradient(135deg, #F59E0B, #D97706);">P</div>
+                        <div class="post-meta">
+                            <div class="author">Programming Hub</div>
+                            <div class="time">6 hours ago • Programming</div>
+                        </div>
+                        <span class="subject-tag" style="background: rgba(168, 85, 247, 0.2); color: #C084FC;">Question</span>
+                    </div>
+                    <div class="post-content">
+                        <h3>Best resources to learn Python in 2026?</h3>
+                        <p>Starting my coding journey! What are the best free resources for learning Python? Looking for interactive tutorials and practice problems.</p>
+                    </div>
+                    <div class="post-actions">
+                        <button class="vote-btn" onclick="upvote(this)">▲ <span class="count">356</span></button>
+                        <button class="vote-btn" onclick="downvote(this)">▼</button>
+                        <button class="action-btn" onclick="alert('💬 Comments section coming soon!')">💬 67</button>
+                        <button class="action-btn" onclick="alert('Post shared!')">🔗 Share</button>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-header">
+                        <div class="post-avatar" style="background: linear-gradient(135deg, #EC4899, #DB2777);">🏆</div>
+                        <div class="post-meta">
+                            <div class="author">Achievement Unlocked!</div>
+                            <div class="time">8 hours ago</div>
+                        </div>
+                        <span class="subject-tag" style="background: rgba(245, 158, 11, 0.2); color: #FBBF24;">Achievement</span>
+                    </div>
+                    <div class="post-content">
+                        <h3>🎉 Congratulations to our top learners this week!</h3>
+                        <p>Amazing progress from our community! Top performers: @alex_learns (+2500 XP), @smart_student (+2100 XP), @curious_mind (+1850 XP). Keep it up!</p>
+                    </div>
+                    <div class="post-actions">
+                        <button class="vote-btn" onclick="upvote(this)">▲ <span class="count">2.8k</span></button>
+                        <button class="vote-btn" onclick="downvote(this)">▼</button>
+                        <button class="action-btn" onclick="alert('💬 Comments section coming soon!')">💬 89</button>
+                        <button class="action-btn" onclick="alert('Post shared!')">🔗 Share</button>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-header">
+                        <div class="post-avatar" style="background: linear-gradient(135deg, #3B82F6, #2563EB);">E</div>
+                        <div class="post-meta">
+                            <div class="author">English Department</div>
+                            <div class="time">1 day ago • English</div>
+                        </div>
+                        <span class="subject-tag" style="background: rgba(59, 130, 246, 0.2); color: #60A5FA;">Assignment</span>
+                    </div>
+                    <div class="post-content">
+                        <h3>Essay Writing Workshop: Due This Friday</h3>
+                        <p>New assignment posted! Write a 500-word argumentative essay on "Technology's Impact on Education". Includes helpful guides and examples.</p>
+                    </div>
+                    <div class="post-actions">
+                        <button class="vote-btn" onclick="upvote(this)">▲ <span class="count">234</span></button>
+                        <button class="vote-btn" onclick="downvote(this)">▼</button>
+                        <button class="action-btn" onclick="alert('💬 Comments section coming soon!')">💬 15</button>
+                        <button class="action-btn" onclick="alert('📋 View Assignment')">📋 View</button>
+                        <button class="continue-btn">Start Assignment →</button>
+                    </div>
+                </article>
+            </div>
+        </main>
+
+        <aside class="sidebar-right">
+            <div class="chat-header">
+                <h3>Messages</h3>
+                <button class="btn btn-ghost">✏️</button>
+            </div>
+
+            <div class="chat-list">
+                <div class="chat-item active">
+                    <div class="chat-avatar" style="background: linear-gradient(135deg, #EC4899, #F472B6);">A</div>
+                    <div class="chat-info">
+                        <h4>Study Group Alpha</h4>
+                        <p>Alex is typing...</p>
+                    </div>
+                    <span class="unread-count">3</span>
+                </div>
+                <div class="chat-item">
+                    <div class="chat-avatar" style="background: linear-gradient(135deg, #10B981, #34D399);">S</div>
+                    <div class="chat-info">
+                        <h4>Sarah Chen</h4>
+                        <p>See you at the study session! 📚</p>
+                    </div>
+                </div>
+                <div class="chat-item">
+                    <div class="chat-avatar" style="background: linear-gradient(135deg, #F59E0B, #FBBF24);">J</div>
+                    <div class="chat-info">
+                        <h4>James Wilson</h4>
+                        <p>Can you help with calculus?</p>
+                    </div>
+                </div>
+                <div class="chat-item">
+                    <div class="chat-avatar" style="background: linear-gradient(135deg, #8B5CF6, #A78BFA);">M</div>
+                    <div class="chat-info">
+                        <h4>Math Tutors</h4>
+                        <p>Prof. Smith: Good question!</p>
+                    </div>
+                    <span class="unread-count">12</span>
+                </div>
+                <div class="chat-item">
+                    <div class="chat-avatar" style="background: linear-gradient(135deg, #3B82F6, #60A5FA);">Sci</div>
+                    <div class="chat-info">
+                        <h4>Science Lab Group</h4>
+                        <p>Lab report due Friday</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-window">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message received">Hey! Are you ready for the math quiz tomorrow?</div>
+                    <div class="message sent">I think so! Just reviewing the calculus chapter now 📖</div>
+                    <div class="message received">Nice! Want to join our study group call later? 👥</div>
+                    <div class="message sent">Definitely! What time works for you?</div>
+                    <div class="message received">How about 7 PM? We can practice problems together</div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="messageInput" placeholder="Type a message...">
+                    <button onclick="sendMessage()">➤</button>
+                </div>
+            </div>
+
+            <div class="leaderboard">
+                <h4>🏆 Weekly Leaderboard</h4>
+                <div class="leaderboard-item">
+                    <span class="rank gold">1</span>
+                    <div class="leaderboard-user" style="background: linear-gradient(135deg, #FFD700, #FFA500);">A</div>
+                    <div class="leaderboard-info">
+                        <h5>alex_learns</h5>
+                        <span>+2,500 XP</span>
+                    </div>
+                </div>
+                <div class="leaderboard-item">
+                    <span class="rank silver">2</span>
+                    <div class="leaderboard-user" style="background: linear-gradient(135deg, #C0C0C0, #A0A0A0);">S</div>
+                    <div class="leaderboard-info">
+                        <h5>smart_student</h5>
+                        <span>+2,100 XP</span>
+                    </div>
+                </div>
+                <div class="leaderboard-item">
+                    <span class="rank bronze">3</span>
+                    <div class="leaderboard-user" style="background: linear-gradient(135deg, #CD7F32, #A0522D);">M</div>
+                    <div class="leaderboard-info">
+                        <h5>curious_mind</h5>
+                        <span>+1,850 XP</span>
+                    </div>
+                </div>
+                <div class="leaderboard-item">
+                    <span class="rank" style="background: var(--surface-light); color: var(--text-muted);">4</span>
+                    <div class="leaderboard-user" style="background: linear-gradient(135deg, #4F46E5, #7C3AED);">Y</div>
+                    <div class="leaderboard-info">
+                        <h5>you</h5>
+                        <span>+1,420 XP</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="achievements">
+                <h4>🏅 Your Badges</h4>
+                <div class="badges">
+                    <div class="badge unlocked" style="background: linear-gradient(135deg, #FFD700, #FFA500);" title="First Course Completed">🎓</div>
+                    <div class="badge unlocked" style="background: linear-gradient(135deg, #4F46E5, #7C3AED);" title="7 Day Streak">🔥</div>
+                    <div class="badge unlocked" style="background: linear-gradient(135deg, #10B981, #34D399);" title="Helped 10 Students">🤝</div>
+                    <div class="badge unlocked" style="background: linear-gradient(135deg, #F59E0B, #FBBF24);" title="100 Questions Answered">💡</div>
+                    <div class="badge locked" style="background: linear-gradient(135deg, #64748B, #475569);" title="30 Day Streak">🔥</div>
+                    <div class="badge locked" style="background: linear-gradient(135deg, #64748B, #475569);" title="Course Master">👑</div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        function upvote(btn) {
+            const count = btn.querySelector('.count');
+            let num = parseInt(count.textContent.replace('k', '000'));
+            if (btn.classList.contains('upvoted')) {
+                num--;
+                btn.classList.remove('upvoted');
+            } else {
+                num++;
+                btn.classList.add('upvoted');
+            }
+            count.textContent = num > 1000 ? (num/1000).toFixed(1) + 'k' : num;
+        }
+
+        function downvote(btn) {
+            const count = btn.nextElementSibling;
+            if (count && count.classList.contains('count')) {
+                let num = parseInt(count.textContent.replace('k', '000'));
+                if (btn.classList.contains('downvoted')) {
+                    num++;
+                    btn.classList.remove('downvoted');
+                } else {
+                    num--;
+                    btn.classList.add('downvoted');
+                }
+                count.textContent = num > 1000 ? (num/1000).toFixed(1) + 'k' : num;
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const msg = input.value.trim();
+            if (msg) {
+                const container = document.getElementById('chatMessages');
+                const div = document.createElement('div');
+                div.className = 'message sent';
+                div.textContent = msg;
+                container.appendChild(div);
+                input.value = '';
+                container.scrollTop = container.scrollHeight;
+                
+                setTimeout(() => {
+                    const reply = document.createElement('div');
+                    reply.className = 'message received';
+                    reply.textContent = 'That\'s awesome! 🎉';
+                    container.appendChild(reply);
+                    container.scrollTop = container.scrollHeight;
+                }, 500);
+            }
+        }
+
+        document.getElementById('messageInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('.subject-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.subject-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('.chat-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
